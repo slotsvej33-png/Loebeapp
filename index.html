@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Halvmarathon"/>
+<title>Halvmarathon 23. maj</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0b1117;font-family:'Outfit',sans-serif;color:#fff;max-width:430px;margin:0 auto;min-height:100vh}
+button{cursor:pointer;font-family:'Outfit',sans-serif}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.6);cursor:pointer}
+
+.hero{background:linear-gradient(160deg,#0b1117 0%,#102030 60%,#0f2a1a 100%);padding:52px 20px 24px;position:relative;overflow:hidden}
+.hero-ring{position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:1.5px solid rgba(255,215,0,0.09);pointer-events:none}
+.eyebrow{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,215,0,0.5);font-weight:600;margin-bottom:5px}
+.h1{font-family:'Archivo Black',sans-serif;font-size:36px;line-height:1;margin-bottom:2px}
+.h2{font-family:'Archivo Black',sans-serif;font-size:21px;color:#ffd700;margin-bottom:8px}
+.goal{display:inline-flex;align-items:center;gap:7px;background:rgba(255,215,0,0.07);border:1px solid rgba(255,215,0,0.18);border-radius:30px;padding:5px 12px;margin-bottom:18px;font-size:11px;color:#ffd700;font-weight:600}
+.stats{display:flex;gap:8px;margin-bottom:18px}
+.stat{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:10px 6px;text-align:center}
+.stat-v{font-family:'Archivo Black',sans-serif;font-size:20px;color:#ffd700;line-height:1}
+.stat-v.blue{color:#4da6ff;font-size:13px}
+.stat-l{font-size:9px;color:#334;margin-top:3px;text-transform:uppercase;letter-spacing:0.8px}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:5px;font-size:11px;color:#334}
+.prog-pct{color:#50dc64;font-weight:600}
+.prog-track{height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#4da6ff,#50dc64);border-radius:4px;transition:width 0.5s}
+
+.nav-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,193,7,0.1);border:1px solid rgba(255,193,7,0.25);border-radius:20px;padding:7px 14px;color:#ffd700;font-weight:700;font-size:12px;margin:12px 13px 0;float:right}
+
+.weeks{padding:12px 13px 4px;clear:both}
+
+.week{border-radius:22px;margin-bottom:12px;overflow:hidden;border:2px solid rgba(255,255,255,0.05);background:linear-gradient(135deg,#131a22,#1c2733);transition:border-color 0.2s}
+.week.open{border-color:rgba(255,255,255,0.15)}
+.week.race{background:linear-gradient(135deg,#1a1000,#2d1f00)}
+.week.race.open{border-color:#ffd700}
+.week-hdr{padding:15px 17px;display:flex;align-items:center;gap:13px;cursor:pointer;user-select:none}
+.wlabel{font-family:'Archivo Black',sans-serif;font-size:17px;color:#fff}
+.race .wlabel{color:#ffd700}
+.wdates{font-size:10px;color:#3a4a5a;background:rgba(255,255,255,0.05);padding:2px 7px;border-radius:20px}
+.wtheme{font-size:12px;color:#8a9bb0;margin-top:1px}
+.race .wtheme{color:#ffaa00}
+.wkm{font-family:'Archivo Black',sans-serif;font-size:24px;color:#fff;line-height:1;text-align:right}
+.race .wkm{color:#ffd700}
+.wkm-lbl{font-size:10px;color:#445;text-align:right}
+.runs{display:none;padding:0 13px 13px}
+.runs.open{display:block}
+.divider{height:1px;background:rgba(255,255,255,0.06);margin-bottom:11px}
+
+.run{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:14px;margin-bottom:8px;border:1.5px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.04);transition:all 0.2s}
+.run.done{border-color:rgba(80,220,100,0.3);background:rgba(80,220,100,0.04)}
+.run.race-run{border-color:rgba(255,215,0,0.25)}
+.chk{width:30px;height:30px;border-radius:9px;flex-shrink:0;border:2px solid rgba(255,255,255,0.18);background:transparent;display:flex;align-items:center;justify-content:center;font-size:16px;color:rgba(255,255,255,0.25);transition:all 0.2s;padding:0}
+.chk.done{background:#50dc64;border:none;color:#fff;font-size:15px}
+.run-info{flex:1;min-width:0}
+.run-top{display:flex;justify-content:space-between;align-items:baseline}
+.run-day{font-weight:700;font-size:14px;color:#fff}
+.run.done .run-day{color:#888;text-decoration:line-through}
+.run-date{font-size:11px;color:#3a4a5a;margin-left:5px}
+.run-km{font-family:'Archivo Black',sans-serif;font-size:20px;color:#fff}
+.run-km.gold{color:#ffd700}
+.run-km.green{color:#50dc64}
+.km-unit{font-size:11px;color:#445;margin-left:2px}
+.run-diff{font-size:10px}
+.run-mid{display:flex;justify-content:space-between;align-items:center;margin-top:5px;gap:4px}
+.type-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.pace-wrap{display:flex;gap:5px;align-items:center}
+.pace-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(77,166,255,0.08);color:#5b8aaa}
+.pace-badge.gold{background:rgba(255,215,0,0.08);color:#ffd700}
+.est{font-size:10px;color:#334}
+.run-bot{margin-top:3px;font-size:11px;color:#334}
+.run-logged{margin-top:4px;font-size:11px;color:#4aaa6a}
+.edit-link{font-size:10px;color:#445;background:none;border:none;text-decoration:underline;padding:0;margin-left:6px;cursor:pointer}
+
+.legend{background:linear-gradient(135deg,#131a22,#1c2733);border-radius:20px;padding:14px 15px;border:1.5px solid rgba(255,255,255,0.05);margin:0 13px 4px}
+.legend-title{font-family:'Archivo Black',sans-serif;font-size:13px;color:#fff;margin-bottom:10px}
+.legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.legend-item{display:flex;gap:7px;align-items:flex-start;background:rgba(255,255,255,0.03);border-radius:9px;padding:7px 9px}
+.legend-name{font-size:11px;font-weight:700;color:#bbb}
+.legend-desc{font-size:10px;color:#334}
+
+.iv-section{padding:12px 13px 40px}
+.iv-header{background:linear-gradient(135deg,#1a1000,#2d2000);border-radius:20px;padding:16px 18px;border:1.5px solid rgba(255,193,7,0.2);margin-bottom:12px}
+.iv-eyebrow{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,215,0,0.5);font-weight:600;margin-bottom:3px}
+.iv-title{font-family:'Archivo Black',sans-serif;font-size:20px;color:#fff;margin-bottom:5px}
+.iv-desc{font-size:12px;color:#8a9bb0;line-height:1.5}
+.iv-card{background:linear-gradient(135deg,#131a22,#1c2733);border-radius:16px;margin-bottom:10px;border:1.5px solid rgba(255,255,255,0.06);padding:13px 14px}
+.iv-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.iv-badge{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px}
+.iv-label{font-family:'Archivo Black',sans-serif;font-size:16px;color:#fff}
+.iv-pills{display:flex;gap:7px;margin-bottom:10px}
+.iv-pill{flex:1;background:rgba(255,255,255,0.05);border-radius:10px;padding:8px 10px;border:1px solid rgba(255,255,255,0.06)}
+.iv-pill-lbl{font-size:9px;color:#556;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:2px}
+.iv-pill-val{font-family:'Archivo Black',sans-serif;font-size:13px;color:#fff}
+.iv-pill-val.blue{color:#4da6ff}
+.iv-tip{background:rgba(255,255,255,0.03);border-radius:9px;padding:8px 10px;font-size:11px;color:#8a9bb0;line-height:1.5}
+.husk{background:linear-gradient(135deg,#1a1000,#2d1f00);border-radius:16px;padding:14px;border:1.5px solid rgba(255,215,0,0.2);margin-bottom:12px}
+.husk-title{font-family:'Archivo Black',sans-serif;font-size:13px;color:#ffd700;margin-bottom:8px}
+.husk-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;font-size:12px;color:#ccc;line-height:1.5}
+.husk-item:last-child{margin-bottom:0}
+.back-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:12px;color:#aaa;font-weight:700;font-size:12px;width:100%}
+
+/* Modal */
+.overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.75);display:flex;align-items:flex-end;justify-content:center}
+.modal{background:#1c2733;border-radius:24px 24px 0 0;padding:28px 22px 44px;width:100%;max-width:430px;border:1.5px solid rgba(255,255,255,0.1)}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-title{font-family:'Archivo Black',sans-serif;font-size:18px;color:#fff}
+.modal-close{background:rgba(255,255,255,0.08);border:none;border-radius:10px;color:#aaa;font-size:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.form-lbl{font-size:11px;color:#8a9bb0;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;display:block}
+.km-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.km-input{flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:#fff;font-size:26px;font-family:'Archivo Black',sans-serif;outline:none;text-align:center;width:100%}
+.km-unit-lbl{color:#8a9bb0;font-size:16px;font-weight:600}
+.km-diff{text-align:center;font-size:13px;font-weight:600;min-height:20px;margin-bottom:10px}
+.date-input{width:100%;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px 14px;color:#fff;font-size:15px;outline:none;color-scheme:dark;margin-bottom:22px}
+.btn-row{display:flex;gap:8px}
+.btn-cancel{flex:1;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#aaa;font-size:14px}
+.btn-save{flex:2;padding:13px;border-radius:12px;border:none;background:#50dc64;color:#fff;font-size:14px;font-family:'Archivo Black',sans-serif}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-ring"></div>
+  <div class="eyebrow">Din træningsplan</div>
+  <div class="h1">Halvmarathon</div>
+  <div class="h2">23. maj 2026</div>
+  <div class="goal">🎯 5:00 min/km · mål ~1:45:33</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-v" id="s-days">–</div><div class="stat-l">dage tilbage</div></div>
+    <div class="stat"><div class="stat-v blue" id="s-km">–</div><div class="stat-l">km løbet/plan</div></div>
+    <div class="stat"><div class="stat-v blue" id="s-runs">–</div><div class="stat-l">løb klaret</div></div>
+  </div>
+  <div class="prog-row"><span>Samlet fremgang</span><span class="prog-pct" id="s-pct">0%</span></div>
+  <div class="prog-track"><div class="prog-fill" id="s-bar" style="width:0%"></div></div>
+</div>
+
+<!-- NAV -->
+<button class="nav-btn" onclick="scrollTo({top:document.getElementById('intervaller').offsetTop,behavior:'smooth'})">⚡ Interval Guide ↓</button>
+
+<!-- WEEKS -->
+<div class="weeks" id="weeks"></div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-title">Løbetyper</div>
+  <div class="legend-grid">
+    <div class="legend-item"><span style="font-size:14px">🐢</span><div><div class="legend-name">Let</div><div class="legend-desc">6:15 /km · rolig</div></div></div>
+    <div class="legend-item"><span style="font-size:14px">🔥</span><div><div class="legend-name">Tempo</div><div class="legend-desc">5:00 /km · race</div></div></div>
+    <div class="legend-item"><span style="font-size:14px">⚡</span><div><div class="legend-name">Interval</div><div class="legend-desc">4:20 /km · drag</div></div></div>
+    <div class="legend-item"><span style="font-size:14px">🌿</span><div><div class="legend-name">Lang tur</div><div class="legend-desc">6:15 /km · distance</div></div></div>
+  </div>
+</div>
+
+<!-- INTERVAL GUIDE -->
+<div class="iv-section" id="intervaller">
+  <div class="iv-header">
+    <div class="iv-eyebrow">Strukturerede intervaller</div>
+    <div class="iv-title">Interval Guide ⚡</div>
+    <div class="iv-desc">Rotér A→B→C→D uge for uge. Én kvalitetssession om ugen er nok.</div>
+  </div>
+  <div class="iv-card">
+    <div class="iv-top"><div class="iv-badge" style="background:#cce5ff;color:#004085">A</div><div class="iv-label">6 × 800m</div></div>
+    <div class="iv-pills"><div class="iv-pill"><div class="iv-pill-lbl">Tempo</div><div class="iv-pill-val">⏱ 4:25–4:35 /km</div></div><div class="iv-pill"><div class="iv-pill-lbl">Pause</div><div class="iv-pill-val blue">🔄 90 sek jog</div></div></div>
+    <div class="iv-tip">💡 Hold tempoet jævnt fra start til slut.</div>
+  </div>
+  <div class="iv-card">
+    <div class="iv-top"><div class="iv-badge" style="background:#e2d9f3;color:#432874">B</div><div class="iv-label">4 × 1.5 km</div></div>
+    <div class="iv-pills"><div class="iv-pill"><div class="iv-pill-lbl">Tempo</div><div class="iv-pill-val">⏱ ~4:45 /km</div></div><div class="iv-pill"><div class="iv-pill-lbl">Pause</div><div class="iv-pill-val blue">🔄 2 min jog</div></div></div>
+    <div class="iv-tip">💡 Tæt på racetempo. Fokus på form – ikke fart.</div>
+  </div>
+  <div class="iv-card">
+    <div class="iv-top"><div class="iv-badge" style="background:#fff3cd;color:#856404">C</div><div class="iv-label">10 × 400m</div></div>
+    <div class="iv-pills"><div class="iv-pill"><div class="iv-pill-lbl">Tempo</div><div class="iv-pill-val">⏱ 4:10–4:20 /km</div></div><div class="iv-pill"><div class="iv-pill-lbl">Pause</div><div class="iv-pill-val blue">🔄 60 sek jog</div></div></div>
+    <div class="iv-tip">💡 Lær kroppen racefart uden for stor belastning.</div>
+  </div>
+  <div class="iv-card">
+    <div class="iv-top"><div class="iv-badge" style="background:#d4edda;color:#155724">D</div><div class="iv-label">3 × 2 km</div></div>
+    <div class="iv-pills"><div class="iv-pill"><div class="iv-pill-lbl">Tempo</div><div class="iv-pill-val">⏱ ~4:50 /km</div></div><div class="iv-pill"><div class="iv-pill-lbl">Pause</div><div class="iv-pill-val blue">🔄 2 min jog</div></div></div>
+    <div class="iv-tip">💡 Hold dig til paceplannen hele vejen.</div>
+  </div>
+  <div class="husk">
+    <div class="husk-title">⭐ Husk</div>
+    <div class="husk-item"><span style="color:#ffd700">→</span><span>Én kvalitetssession om ugen er nok</span></div>
+    <div class="husk-item"><span style="color:#ffd700">→</span><span>Varm op med 10–15 min let løb før intervaller</span></div>
+    <div class="husk-item"><span style="color:#ffd700">→</span><span>Rul ud med 10 min rolig jogging bagefter</span></div>
+    <div class="husk-item"><span style="color:#ffd700">→</span><span>Er du træt: drop tempo, behold strukturen</span></div>
+  </div>
+  <button class="back-btn" onclick="scrollTo({top:0,behavior:'smooth'})">↑ Tilbage til træningsplan</button>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" style="display:none" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title">Løb</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <label class="form-lbl">Løbne kilometer</label>
+    <div class="km-row">
+      <input type="number" step="0.1" min="0.1" max="99" class="km-input" id="km-input" oninput="updateDiff()"/>
+      <span class="km-unit-lbl">km</span>
+    </div>
+    <div class="km-diff" id="km-diff"></div>
+    <label class="form-lbl">Dato</label>
+    <input type="date" class="date-input" id="date-input"/>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeModal()">Annuller</button>
+      <button class="btn-save" onclick="saveRun()">✓ Gem løb</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SK = 'hm-runs-v1';
+const TS = {
+  'Let':         {bg:'#d4edda',fg:'#155724'},
+  'Interval':    {bg:'#fff3cd',fg:'#856404'},
+  'Tempo':       {bg:'#cce5ff',fg:'#004085'},
+  'Lang tur':    {bg:'#e2d9f3',fg:'#432874'},
+  'Aktivering':  {bg:'#fce4ec',fg:'#880e4f'},
+  'HALVMARATHON':{bg:'#1a1a00',fg:'#ffd700'},
+};
+const PACE = {
+  let:{s:375,l:'6:15 /km'}, tempo:{s:300,l:'5:00 /km'}, interval:{s:260,l:'4:20 /km'},
+  langtur:{s:375,l:'6:15 /km'}, aktivering:{s:330,l:'5:30 /km'}, race:{s:300,l:'5:00 /km'}
+};
+const WEEKS = [
+  {week:1,label:'Uge 1',theme:'Kom i gang',runs:[
+    {id:'1-1',day:'Tirsdag',date:'2026-04-14',km:7,  type:'Let',         emoji:'🐢',pace:PACE.let,       note:'Roligt tempo, varm kroppen op'},
+    {id:'1-2',day:'Torsdag',date:'2026-04-16',km:7,  type:'Interval',    emoji:'⚡',pace:PACE.interval,  note:'6×400m drag @ 4:20 + pause'},
+    {id:'1-3',day:'Søndag', date:'2026-04-19',km:10, type:'Lang tur',    emoji:'🌿',pace:PACE.langtur,   note:'Langsom og behagelig'},
+  ]},
+  {week:2,label:'Uge 2',theme:'Byg volumen',runs:[
+    {id:'2-1',day:'Tirsdag',date:'2026-04-21',km:8,  type:'Let',         emoji:'🐢',pace:PACE.let,       note:'Aktiv restitution'},
+    {id:'2-2',day:'Torsdag',date:'2026-04-23',km:11, type:'Tempo',       emoji:'🔥',pace:PACE.tempo,     note:'Løb 35 min @ 5:00 min/km'},
+    {id:'2-3',day:'Søndag', date:'2026-04-26',km:12, type:'Lang tur',    emoji:'🌿',pace:PACE.langtur,   note:'Jævnt og kontrolleret'},
+  ]},
+  {week:3,label:'Uge 3',theme:'Peak-uge',runs:[
+    {id:'3-1',day:'Tirsdag',date:'2026-04-28',km:9,  type:'Let',         emoji:'🐢',pace:PACE.let,       note:'Roligt – gem kræfterne'},
+    {id:'3-2',day:'Torsdag',date:'2026-04-30',km:10, type:'Interval',    emoji:'⚡',pace:PACE.interval,  note:'5×1000m @ 4:20 + 90 sek pause'},
+    {id:'3-3',day:'Søndag', date:'2026-05-03',km:16, type:'Lang tur',    emoji:'🌿',pace:PACE.langtur,   note:'Din longest run – tag det roligt!'},
+  ]},
+  {week:4,label:'Uge 4',theme:'Hold formen',runs:[
+    {id:'4-1',day:'Tirsdag',date:'2026-05-05',km:8,  type:'Let',         emoji:'🐢',pace:PACE.let,       note:'Let og afslappet'},
+    {id:'4-2',day:'Torsdag',date:'2026-05-07',km:11, type:'Tempo',       emoji:'🔥',pace:PACE.tempo,     note:'40 min @ 5:00 min/km'},
+    {id:'4-3',day:'Søndag', date:'2026-05-10',km:13, type:'Lang tur',    emoji:'🌿',pace:PACE.langtur,   note:'Stærk og kontrolleret'},
+  ]},
+  {week:5,label:'Uge 5',theme:'Nedtrapning',runs:[
+    {id:'5-1',day:'Tirsdag',date:'2026-05-12',km:7,  type:'Let',         emoji:'🐢',pace:PACE.let,       note:'Meget roligt'},
+    {id:'5-2',day:'Torsdag',date:'2026-05-14',km:9,  type:'Tempo',       emoji:'🔥',pace:PACE.tempo,     note:'25 min @ 5:00 min/km'},
+    {id:'5-3',day:'Søndag', date:'2026-05-17',km:10, type:'Lang tur',    emoji:'🌿',pace:PACE.langtur,   note:'Frisk og let'},
+  ]},
+  {week:6,label:'Uge 6',theme:'Race-uge 🏁',runs:[
+    {id:'6-1',day:'Tirsdag',date:'2026-05-19',km:5,    type:'Let',         emoji:'🐢',pace:PACE.let,       note:'15 min jogging – gem kræfterne'},
+    {id:'6-2',day:'Torsdag',date:'2026-05-21',km:3,    type:'Aktivering',  emoji:'✨',pace:PACE.aktivering,note:'4×30 sek accelerationer'},
+    {id:'6-3',day:'Lørdag', date:'2026-05-23',km:21.1, type:'HALVMARATHON',emoji:'🏅',pace:PACE.race,      note:'Mål: 1:45:33 · 5:00 min/km',isRace:true},
+  ]},
+];
+
+// ── State ──
+var data = {};
+var openWeek = 1;
+var activeRun = null;
+
+// ── Storage ──
+function load() {
+  try { var s = localStorage.getItem(SK); if (s) data = JSON.parse(s); } catch(e) {}
+}
+function save() {
+  try { localStorage.setItem(SK, JSON.stringify(data)); } catch(e) {}
+}
+
+// ── Helpers ──
+function fmtDate(iso) {
+  return new Date(iso+'T12:00:00').toLocaleDateString('da-DK',{day:'numeric',month:'short'});
+}
+function fmtTime(secs) {
+  var h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60);
+  return h>0?h+'t '+('0'+m).slice(-2)+'m':m+'m';
+}
+function est(km,pace) { return fmtTime(Math.round(km*pace.s)); }
+
+// ── Stats ──
+function updateStats() {
+  var allRuns = WEEKS.reduce(function(a,w){return a.concat(w.runs);},[]);
+  var total = allRuns.length;
+  var done = allRuns.filter(function(r){return data[r.id];}).length;
+  var planned = allRuns.reduce(function(s,r){return s+r.km;},0);
+  var actual = allRuns.reduce(function(s,r){
+    var e=data[r.id]; return s+(e&&e.actualKm!=null?e.actualKm:e?r.km:0);
+  },0);
+  var days = Math.max(0,Math.ceil((new Date('2026-05-23')-new Date())/86400000));
+  var pct = total?done/total*100:0;
+  document.getElementById('s-days').textContent = days;
+  document.getElementById('s-km').textContent = Math.round(actual*10)/10+'/'+Math.round(planned);
+  document.getElementById('s-runs').textContent = done+'/'+total;
+  document.getElementById('s-pct').textContent = Math.round(pct)+'%';
+  document.getElementById('s-bar').style.width = pct+'%';
+}
+
+// ── Render ──
+function render() {
+  var container = document.getElementById('weeks');
+  container.innerHTML = '';
+  WEEKS.forEach(function(wk) {
+    var isRace = wk.week===6;
+    var done = wk.runs.filter(function(r){return data[r.id];}).length;
+    var total = wk.runs.length;
+    var pct = done/total;
+    var planned = wk.runs.reduce(function(s,r){return s+r.km;},0);
+    var actual = wk.runs.reduce(function(s,r){
+      var e=data[r.id]; return s+(e&&e.actualKm!=null?e.actualKm:e?r.km:0);
+    },0);
+    var showAct = done>0 && Math.round(actual*10)/10!==Math.round(planned*10)/10;
+    var isOpen = openWeek===wk.week;
+    var C = 2*Math.PI*17;
+    var ringColor = done===total?'#50dc64':isRace?'#ffd700':'#4da6ff';
+    var div = document.createElement('div');
+    div.className = 'week'+(isRace?' race':'')+(isOpen?' open':'');
+    div.innerHTML =
+      '<div class="week-hdr" onclick="toggleWeek('+wk.week+')">'+
+        '<svg width="46" height="46" viewBox="0 0 46 46" style="flex-shrink:0">'+
+          '<circle cx="23" cy="23" r="17" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3.5"/>'+
+          '<circle cx="23" cy="23" r="17" fill="none" stroke="'+ringColor+'" stroke-width="3.5"'+
+            ' stroke-dasharray="'+C+'" stroke-dashoffset="'+C*(1-pct)+'"'+
+            ' stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center"/>'+
+          '<text x="23" y="27" text-anchor="middle" style="font-family:\'Archivo Black\',sans-serif;font-size:12px;fill:'+(done===total?'#50dc64':'#fff')+'">'+done+'/'+total+'</text>'+
+        '</svg>'+
+        '<div style="flex:1">'+
+          '<div style="display:flex;align-items:center;gap:7px;margin-bottom:2px">'+
+            '<span class="wlabel">'+wk.label+'</span>'+
+            '<span class="wdates">'+fmtDate(wk.runs[0].date)+' – '+fmtDate(wk.runs[wk.runs.length-1].date)+'</span>'+
+          '</div>'+
+          '<div class="wtheme">'+wk.theme+'</div>'+
+        '</div>'+
+        '<div style="flex-shrink:0">'+
+          '<div class="wkm">'+(showAct?Math.round(actual*10)/10:planned)+'</div>'+
+          '<div class="wkm-lbl">'+(showAct?'af '+planned+' km':'km plan')+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="runs'+(isOpen?' open':'')+'" id="runs-'+wk.week+'">'+
+        '<div class="divider"></div>'+
+        wk.runs.map(function(run){return renderRun(run);}).join('')+
+      '</div>';
+    container.appendChild(div);
+  });
+  updateStats();
+}
+
+function renderRun(run) {
+  var e = data[run.id];
+  var done = !!e;
+  var ts = TS[run.type]||TS['Let'];
+  var dKm = e&&e.actualKm!=null?e.actualKm:run.km;
+  var diff = e&&e.actualKm!=null?Math.round((e.actualKm-run.km)*10)/10:null;
+  var kmClass = run.isRace?'gold':done?'green':'';
+  var diffHtml = diff!==null?'<div class="run-diff" style="color:'+(diff>=0?'#50dc64':'#ff9966')+'">'+(diff>0?'+'+diff:diff)+' ift plan</div>':'';
+  var botHtml = e&&e.runDate
+    ?'<div class="run-logged">📅 Løbet '+fmtDate(e.runDate)+'<button class="edit-link" onclick="openModal(\''+run.id+'\')">rediger</button></div>'
+    :'<div class="run-bot">'+run.note+'</div>';
+  return '<div class="run'+(done?' done':'')+(run.isRace?' race-run':'')+'" id="row-'+run.id+'">'+
+    '<button class="chk'+(done?' done':'')+'" onclick="'+(done?'uncomplete(\''+run.id+'\')':'openModal(\''+run.id+'\')')+'">'+
+      (done?'✓':'+')+'</button>'+
+    '<span style="font-size:19px;flex-shrink:0">'+run.emoji+'</span>'+
+    '<div class="run-info">'+
+      '<div class="run-top">'+
+        '<div><span class="run-day">'+run.day+'</span><span class="run-date">'+fmtDate(run.date)+'</span></div>'+
+        '<div style="text-align:right;flex-shrink:0">'+
+          '<span class="run-km'+(kmClass?' '+kmClass:'')+'">'+(dKm)+'</span><span class="km-unit">km</span>'+
+          diffHtml+
+        '</div>'+
+      '</div>'+
+      '<div class="run-mid">'+
+        '<span class="type-badge" style="background:'+ts.bg+';color:'+ts.fg+'">'+run.type+'</span>'+
+        '<div class="pace-wrap">'+
+          '<span class="pace-badge'+(run.isRace?' gold':'')+'">⏱ '+run.pace.l+'</span>'+
+          '<span class="est">~'+est(run.km,run.pace)+'</span>'+
+        '</div>'+
+      '</div>'+
+      botHtml+
+    '</div>'+
+  '</div>';
+}
+
+function toggleWeek(n) {
+  openWeek = openWeek===n?null:n;
+  render();
+}
+
+// ── Modal ──
+function openModal(runId) {
+  var run = WEEKS.reduce(function(a,w){return a.concat(w.runs);},[]).find(function(r){return r.id===runId;});
+  if (!run) return;
+  activeRun = runId;
+  var e = data[runId];
+  document.getElementById('modal-title').textContent = run.emoji+' '+run.day+' · '+run.km+' km';
+  document.getElementById('km-input').value = e&&e.actualKm!=null?e.actualKm:run.km;
+  document.getElementById('date-input').value = e&&e.runDate?e.runDate:run.date;
+  document.getElementById('km-diff').textContent = '';
+  document.getElementById('overlay').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('overlay').style.display = 'none';
+  activeRun = null;
+}
+
+function updateDiff() {
+  if (!activeRun) return;
+  var run = WEEKS.reduce(function(a,w){return a.concat(w.runs);},[]).find(function(r){return r.id===activeRun;});
+  if (!run) return;
+  var v = parseFloat(document.getElementById('km-input').value);
+  var el = document.getElementById('km-diff');
+  if (isNaN(v)||v<=0){el.textContent='';return;}
+  var diff = Math.round((v-run.km)*10)/10;
+  el.textContent = (diff>0?'+'+diff:diff)+' km ift plan';
+  el.style.color = diff>=0?'#50dc64':'#ff9966';
+}
+
+function saveRun() {
+  if (!activeRun) return;
+  var v = parseFloat(document.getElementById('km-input').value);
+  var d = document.getElementById('date-input').value;
+  if (isNaN(v)||v<=0) return;
+  data[activeRun] = {actualKm:Math.round(v*10)/10, runDate:d, completedAt:Date.now()};
+  save();
+  closeModal();
+  render();
+}
+
+function uncomplete(runId) {
+  delete data[runId];
+  save();
+  render();
+}
+
+// ── Init ──
+load();
+render();
+</script>
+</body>
+</html>
